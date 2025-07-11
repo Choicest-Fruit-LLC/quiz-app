@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Quiz App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    .quiz-container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-bottom: 15px;
+    }
+    .option {
+      margin: 10px 0;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #score {
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <h2 id="question">Loading...</h2>
+  <div class="option">
+    <input type="radio" name="answer" id="a" class="answer">
+    <label for="a" id="a_text">Answer A</label>
+  </div>
+  <div class="option">
+    <input type="radio" name="answer" id="b" class="answer">
+    <label for="b" id="b_text">Answer B</label>
+  </div>
+  <div class="option">
+    <input type="radio" name="answer" id="c" class="answer">
+    <label for="c" id="c_text">Answer C</label>
+  </div>
+  <div class="option">
+    <input type="radio" name="answer" id="d" class="answer">
+    <label for="d" id="d_text">Answer D</label>
+  </div>
+  <button id="submit">Submit</button>
+  <p id="score"></p>
+</div>
+
+<script>
+  const quizData = [
+    {
+      question: "What is git?",
+      a: "System to control",
+      b: "GitHub repository",
+      c: "Git is a version control system",
+      d: "Git is a programming language",
+      correct: "c"
+    },
+    {
+      question: "Which language is used for web apps?",
+      a: "Python",
+      b: "JavaScript",
+      c: "C++",
+      d: "Java",
+      correct: "b"
+    },
+    {
+      question: "What does HTML stand for?",
+      a: "Hyper Trainer Marking Language",
+      b: "Hyper Text Marketing Language",
+      c: "Hyper Text Markup Language",
+      d: "Hyper Text Markdown Language",
+      correct: "c"
+    }
+  ];
+
+  const questionEl = document.getElementById("question");
+  const answerEls = document.querySelectorAll(".answer");
+  const a_text = document.getElementById("a_text");
+  const b_text = document.getElementById("b_text");
+  const c_text = document.getElementById("c_text");
+  const d_text = document.getElementById("d_text");
+  const submitBtn = document.getElementById("submit");
+  const scoreEl = document.getElementById("score");
+
+  let currentQuiz = 0;
+  let score = 0;
+
+  loadQuiz();
+
+  function loadQuiz() {
+    deselectAnswers();
+    const currentData = quizData[currentQuiz];
+    questionEl.innerText = currentData.question;
+    a_text.innerText = currentData.a;
+    b_text.innerText = currentData.b;
+    c_text.innerText = currentData.c;
+    d_text.innerText = currentData.d;
+  }
+
+  function deselectAnswers() {
+    answerEls.forEach(el => el.checked = false);
+  }
+
+  function getSelected() {
+    let answer;
+    answerEls.forEach(el => {
+      if (el.checked) {
+        answer = el.id;
+      }
+    });
+    return answer;
+  }
+
+  submitBtn.addEventListener("click", () => {
+    const answer = getSelected();
+    if (answer) {
+      if (answer === quizData[currentQuiz].correct) {
+        score++;
+      }
+      currentQuiz++;
+      if (currentQuiz < quizData.length) {
+        loadQuiz();
+      } else {
+        scoreEl.innerHTML = `🎉 You scored ${score} out of ${quizData.length}!`;
+        submitBtn.disabled = true;
+      }
+    } else {
+      alert("Please select an answer!");
+    }
+  });
+</script>
+
+</body>
+</html>
